@@ -4,14 +4,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 class ATGKAnonymization:
-    """
-    ATGK: Anonymization Tool using Gorilla optimization with K-anonymity.
-    
-    Works with ANY CSV dataset - automatically handles:
-    - Numeric columns (age, salary, temperature, etc.)
-    - Categorical columns (gender, city, category, etc.)
-    - Mixed datasets with both types
-    """
+    """Core anonymization engine (Gorilla Optimization + Fuzzy C-Means + k-anonymity)."""
     
     def __init__(self, n_gorillas: int = 40, max_iter: int = 75, n_clusters: int = 5,
                  m: float = 2.0, error: float = 1e-5, maxiter: int = 300):
@@ -56,7 +49,7 @@ class ATGKAnonymization:
         return cluster_ncp / len(qis)
     
     def _preprocess_data(self, data: pd.DataFrame, qis: list[str]) -> pd.DataFrame:
-        """Preprocess data: encode categoricals and normalize - works with any data type."""
+        """Encode categóricos e normaliza valores numéricos."""
         processed_data = data.copy()
         
         for qi in qis:
@@ -141,7 +134,7 @@ class ATGKAnonymization:
         return np.clip(new_position, 0, 1)
     
     def _generalize_values(self, data: pd.DataFrame, cluster_mask: np.ndarray, qi: str) -> str:
-        """Generalize values: [min-max] for numeric, [first-last] for categorical."""
+        """Retorna intervalo generalizado: numérico -> [min-max]; categórico -> [primeiro-último]."""
         cluster_data = data.loc[cluster_mask, qi]
         
         if pd.api.types.is_numeric_dtype(data[qi]):
@@ -199,15 +192,10 @@ class ATGKAnonymization:
         return result
 
 
-def atgk(df: pd.DataFrame, qis: list[str], k: int, 
-         n_gorillas: int = 40, max_iter: int = 75, 
-         n_clusters: int | None = None) -> pd.DataFrame:
-    """
-    ATGK: Anonymization Tool using Gorilla optimization with k-anonymity.
-    
-    Universal anonymization function - works with ANY CSV dataset.
-    Just specify your quasi-identifiers and k value!
-    """
+def atgk(df: pd.DataFrame, qis: list[str], k: int,
+        n_gorillas: int = 40, max_iter: int = 75,
+        n_clusters: int | None = None) -> pd.DataFrame:
+    """Função utilitária: aplica anonimização ATGK ao DataFrame."""
     print(f"\n{'='*60}")
     print(f"ATGK Anonymization")
     print(f"{'='*60}")

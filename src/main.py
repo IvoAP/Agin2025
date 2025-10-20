@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Agin2025 - ATGK Anonymization Tool
-Command-line interface for data anonymization using ATGK algorithm.
-"""
-
 import argparse
 import sys
 from pathlib import Path
