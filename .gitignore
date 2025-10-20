@@ -208,3 +208,6 @@ __marimo__/
 
 # Anon Data
 output/
+repo.key
+aes_salt.bin
+*.enc
